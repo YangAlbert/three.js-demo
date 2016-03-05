@@ -2,21 +2,21 @@ var xmlFileName = "test.xml";
 
 var scene = new THREE.Scene();
 
-var light = new THREE.DirectionalLight(0xeeeeee, 1.0);
-light.position.set(2, -1, 2).normalize();
+var light = new THREE.DirectionalLight(0xffffff, 1.0);
+light.position.set(2, 1, 2).normalize();
 scene.add(light);
 
-light = new THREE.DirectionalLight(0xffffff, 2.0);
-light.position.set(0, 1, 0).normalize();
-scene.add(light);
+// light = new THREE.DirectionalLight(0xffffff, 2.0);
+// light.position.set(0, 1, 0).normalize();
+// scene.add(light);
 
 light = new THREE.AmbientLight(0x404040);
 scene.add(light);
 
 var material = new THREE.MeshPhongMaterial({
 	color: 0xaaaaaa,
-	specular: 0xffffff,
-	shininess: 250
+	specular: 0x000000,
+	shininess: 30
 });
 
 var boundingBox = {
