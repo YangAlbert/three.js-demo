@@ -1,0 +1,33 @@
+<<html>
+<head>
+	<title>test map performance</title>
+</head>
+<body>
+	<script type="text/javascript">
+		function getRandInt(min, max) {
+			return Math.floor(Math.random() * (max - min)) + min;
+		}
+
+		var mapSize = 1000000;
+		var map = {};
+		// var map = new Map();//{};
+		for (var i=0; i<mapSize; ++i) {
+			var key = getRandInt(0, mapSize);
+			map[key] = i;
+			// map.set(key, i);
+		}
+
+		var tm1 = Date.now();
+		var hit = 0;
+		for (var i=0; i<mapSize; ++i) {
+			if (i in map) {
+			// if (map.has(i)) {
+				++hit;
+			}
+		}
+		var tm2 = Date.now();
+
+		console.log('keys found: ' + hit + ', time cost(ms): ' + (tm2-tm1));
+	</script>
+</body>
+</html>

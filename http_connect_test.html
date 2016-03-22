@@ -1,0 +1,67 @@
+<<html>
+<head>
+	<title>http connect test</title>
+</head>
+<body>
+	<script type="text/javascript" src="js/jquery-2.2.0.js"></script>
+	<script type="text/javascript">
+		function ab2str(buf) {
+			return String.fromCharCode.apply(null, new Uint16Array(buf));
+		}
+
+		function str2ab(str) {
+			var buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
+			var bufView = new Uint16Array(buf);
+			for (var i = 0, strLen = str.length; i < strLen; i++) {
+				bufView[i] = str.charCodeAt(i);
+			}
+			return buf;
+		}
+
+		var COMMANDS = {SERVER_DATA: 1, MESH: 2, OBJECT: 3, SCENE: 4};
+		var BYTE = {COMMAND: 1, COUNT: 4};
+
+		var parseScene = function(dv) {
+			var offset = 0;
+			if (dv.getUInt8(0) == COMMANDS.SERVER_DATA) {
+				offset += BYTE.COMMAND;
+				var objCnt = dv.getUInt32(offset);
+
+				offset += BYTE.COUNT;
+				for (var i=0; i<objCnt; ++i) {
+					parseObject(dv, offset);
+				}
+			}			
+		}
+
+		var parseObject = function (dv, offset) {
+
+		}
+
+		// var socket = new WebSocket("ws://192.168.1.104:8081/websocket");
+		var socket = new WebSocket("ws://192.168.1.104:8500");
+		socket.binaryType = 'arraydv';
+		// socket.send('user=abc13af');
+
+		socket.onerror = function (event) {
+			console.log('connect failed: ' + event.data);
+		}
+
+		socket.onmessage = function (event) {
+			console.log('received msg: ' + event.data);
+			if (event.data instanceof ArrayBuffer) {
+				var buffer = event.data;
+				var dv = new DataView(buffer);
+				
+				parseScene(dv);
+			}
+		}
+
+		socket.onopen = function (event) {
+			console.log('connected.');
+			var buffer = str2ab("test_scene");
+			socket.send(buffer);
+		}
+	</script>
+</body>
+</html>
